@@ -31,6 +31,8 @@
 #import "JSBackspaceReportingTextField.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 NSString *const JSTokenFieldFrameDidChangeNotification = @"JSTokenFieldFrameDidChangeNotification";
 NSString *const JSTokenFieldNewFrameKey = @"JSTokenFieldNewFrameKey";
 NSString *const JSTokenFieldOldFrameKey = @"JSTokenFieldOldFrameKey";
@@ -82,11 +84,13 @@ NSString *const JSDeletedTokenKey = @"JSDeletedTokenKey";
 
 - (void)commonSetup {
     CGRect frame = self.frame;
-    [self setBackgroundColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0]];
+//    [self setBackgroundColor:[UIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:1.0]];
+	[self setBackgroundColor:UIColor.clearColor];
     
     _label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, frame.size.height)];
     [_label setBackgroundColor:[UIColor clearColor]];
-    [_label setTextColor:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0]];
+	// [_label setTextColor:[UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:1.0]];
+	[_label setTextColor:UIColorFromRGB(0x838388)];
     [_label setFont:[UIFont fontWithName:@"Helvetica Neue" size:17.0]];
     
     [self addSubview:_label];
@@ -104,6 +108,9 @@ NSString *const JSDeletedTokenKey = @"JSDeletedTokenKey";
     [_textField setBackground:nil];
     [_textField setBackgroundColor:[UIColor clearColor]];
     [_textField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
+	[_textField setTextColor:UIColorFromRGB(0x0F78FF)];
+	_textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	_textField.autocorrectionType = UITextAutocorrectionTypeNo;
     
     //		[_textField.layer setBorderColor:[[UIColor redColor] CGColor]];
     //		[_textField.layer setBorderWidth:1.0];
@@ -285,7 +292,7 @@ NSString *const JSDeletedTokenKey = @"JSDeletedTokenKey";
 	
 	textFieldFrame.origin = currentRect.origin;
 	
-	if ((self.frame.size.width - textFieldFrame.origin.x) >= 60)
+	if ((self.frame.size.width - textFieldFrame.origin.x) >= 10)
 	{
 		textFieldFrame.size.width = self.frame.size.width - textFieldFrame.origin.x;
 	}
@@ -381,6 +388,11 @@ NSString *const JSDeletedTokenKey = @"JSDeletedTokenKey";
 		return NO;
 	}
 	
+	if ([self.delegate respondsToSelector:@selector(tokenField:didChangeCharacters:)])
+	{
+		NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+		[self.delegate tokenField:self didChangeCharacters: text];
+	}
 	return YES;
 }
 

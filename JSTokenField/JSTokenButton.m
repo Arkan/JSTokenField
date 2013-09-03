@@ -38,16 +38,23 @@
 @synthesize representedObject = _representedObject;
 @synthesize parentField = _parentField;
 
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 + (JSTokenButton *)tokenWithString:(NSString *)string representedObject:(id)obj
 {
 	JSTokenButton *button = (JSTokenButton *)[self buttonWithType:UIButtonTypeCustom];
-	[button setNormalBg:[[UIImage imageNamed:@"tokenNormal.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
-	[button setHighlightedBg:[[UIImage imageNamed:@"tokenHighlighted.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
+    // [button setNormalBg:[ stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
+	[button setHighlightedBg:[[UIImage imageNamed:@"tokenHighlighted"] stretchableImageWithLeftCapWidth:14 topCapHeight:0]];
 	[button setAdjustsImageWhenHighlighted:NO];
-	[button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
 	[[button titleLabel] setFont:[UIFont fontWithName:@"Helvetica Neue" size:15]];
 	[[button titleLabel] setLineBreakMode:UILineBreakModeTailTruncation];
 	[button setTitleEdgeInsets:UIEdgeInsetsMake(2, 10, 0, 10)];
+    
+    [button.layer setBorderColor:[UIColor clearColor]];
+    [button.layer setBorderWidth:0];
+    [button.layer setCornerRadius:3.0f];
+    [button.layer setMasksToBounds:true];
 	
 	[button setTitle:string forState:UIControlStateNormal];
 	
@@ -71,12 +78,14 @@
 	if (_toggled)
 	{
 		[self setBackgroundImage:self.highlightedBg forState:UIControlStateNormal];
-		[self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        // [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self setTitleColor:UIColorFromRGB(0xFFFFFF) forState:UIControlStateNormal];
 	}
 	else
 	{
 		[self setBackgroundImage:self.normalBg forState:UIControlStateNormal];
-		[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        // [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self setTitleColor:UIColorFromRGB(0x0F78FF) forState:UIControlStateNormal];
 	}
 }
 
