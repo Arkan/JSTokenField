@@ -177,6 +177,16 @@ NSString *const JSDeletedTokenKey = @"JSDeletedTokenKey";
 	[self setNeedsLayout];
 }
 
+- (NSMutableArray*) allObjects
+{
+	NSMutableArray* array = NSMutableArray.alloc.init;
+	
+	for (JSTokenButton *token in [_tokens reverseObjectEnumerator]) {
+		[array addObject:token.representedObject];
+	}
+	return (array);
+}
+
 - (void)removeTokenForString:(NSString *)string
 {
     [self removeTokenWithTest:^BOOL(JSTokenButton *token) {
